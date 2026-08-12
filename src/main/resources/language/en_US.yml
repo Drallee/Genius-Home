@@ -2,8 +2,8 @@ configVersion: '1.0.0'
 
 chat:
   prefix:
-    home: '&9&lHOME &7》'
-    error: '&4&lERROR &7》'
+    home: '&9&lHOME &7>'
+    error: '&4&lERROR &7>'
   message:
     player:
       home:
@@ -34,18 +34,18 @@ chat:
           location-not-found: '%chat_prefix% &cHome location not found!'
           unsafe-location: '%chat_prefix% &cTeleport destination is unsafe!'
         command:
-          player-not-found: '%chat_prefix% &cPlayer does''t exist.'
+          player-not-found: '%chat_prefix% &cPlayer does not exist.'
           no-permission: '%chat_prefix% &cYou do not have the right permission.'
           only-players: '&cOnly players can use this command.'
           usage: '&cUsage: %usage%'
           max-homes: '%chat_prefix% &cYou have reached the maximum amount of homes (%max%)'
           config-reloaded: '&aConfiguration reloaded and home cache cleared!'
         home:
-          not-found: '%chat_prefix% &cSeems like you don''t have a home named %home%'
+          not-found: '%chat_prefix% &cSeems like you do not have a home named %home%'
           already-exists: '%chat_prefix% &cSeems like you already have a home named %home%'
           rename-usage: '&cTo change the name of your home, use &e/home-rename %home% (new name)'
           others:
-            not-found: '%chat_prefix% &cSeems like %target% doesn''t have a home named %home%'
+            not-found: '%chat_prefix% &cSeems like %target% does not have a home named %home%'
 
 GUI:
   general:
@@ -57,7 +57,7 @@ GUI:
     next-page: '&aNext page'
     page-lore: '&eCurrent page&7: &b%current%&7/&c%total%'
     already-first-page: '&7You are already on the first page.'
-    already-last-page: 'You are on the last page.'
+    already-last-page: '&7You are on the last page.'
     home-item-lore-own:
       - '&aLeft click&7:'
       - '  &7To teleport'
@@ -96,17 +96,17 @@ GUI:
         set-location: '&eSet new location'
         set-location-lore:
           - '&eLocation&7:'
-          - '  &eX&7: &c%x% &7→ &a%new_x%'
-          - '  &eY&7: &c%y% &7→ &a%new_y%'
-          - '  &eZ&7: &c%z% &7→ &a%new_z%'
-          - '  &eWorld&7: &c%world% &7→ &a%new_world%'
+          - '  &eX&7: &c%x% &7-> &a%new_x%'
+          - '  &eY&7: &c%y% &7-> &a%new_y%'
+          - '  &eZ&7: &c%z% &7-> &a%new_z%'
+          - '  &eWorld&7: &c%world% &7-> &a%new_world%'
         change-icon: '&eChange icon'
         change-icon-lore: '&7Click to change icon'
         change-name: '&eRename home'
         change-name-lore:
           - '&7Current: &b%home%'
           - ''
-          - '&eClick to rename your home'
+          - '&cTemporarily disabled'
         rename:
           title: '&8Rename: &9%home%'
           item-lore:
@@ -114,7 +114,8 @@ GUI:
             - '&7and click the result to confirm'
           no-permission: '&cYou do not have permission to rename your home'
         teleport: '&aTeleport'
-        teleport-lore: '&7Click to teleport'
+        teleport-lore:
+          - '&7Click to teleport'
         change-sound: '&eChange sound effect'
         change-sound-lore:
           - '&7Current: &b%sound%'
@@ -140,28 +141,27 @@ GUI:
         title: '&rWanna set new location (&b%home%&r)?'
         info-lore:
           - '&eLocation&7:'
-          - '  &eX&7: &c%x% &7→ &a%new_x%'
-          - '  &eY&7: &c%y% &7→ &a%new_y%'
-          - '  &eZ&7: &c%z% &7→ &a%new_z%'
-          - '  &eWorld&7: &c%world% &7→ &a%new_world%'
+          - '  &eX&7: &c%x% &7-> &a%new_x%'
+          - '  &eY&7: &c%y% &7-> &a%new_y%'
+          - '  &eZ&7: &c%z% &7-> &a%new_z%'
+          - '  &eWorld&7: &c%world% &7-> &a%new_world%'
         confirm: '&aConfirm'
         confirm-lore:
-          - '&7Your home will change it''s location and'
+          - '&7Your home will change its location and'
           - '&c&lCANNOT be restored&7.'
         cancel: '&cCancel'
       icons:
         title: '&rHome icons list'
         title-heads: '&rHome icons list (Player Heads)'
         heads-item: '&bPLAYER_HEAD'
-        heads-item-lore: '&aClick to change Icon'
+        heads-item-lore: '&aClick to change icon'
         alex-item: '&bALEX'
-        alex-item-lore: '&aClick to change Icon'
+        alex-item-lore: '&aClick to change icon'
         generic-icon-name: '&b%icon%'
-        generic-icon-lore: '&aClick to change Icon'
+        generic-icon-lore: '&aClick to change icon'
       others:
         list: '&r%target%''s home(s) [&b%current%&r]'
 
-# Database Connection Messages
 database:
   connection:
     sqlite: '&aSuccessfully connected to SQLite database'

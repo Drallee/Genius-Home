@@ -1,0 +1,73 @@
+rows: 6
+title: '&8Home settings (&9%home%&8)'
+filler:
+  enabled: true
+  material: GRAY_STAINED_GLASS_PANE
+  name: ''
+  slots: []
+buttons:
+  info:
+    slot: 4
+    material: PLAYER_HEAD
+    name: '&9%home%'
+    lore:
+      - '&eLocation&7:'
+      - '  &eX&7: &b%x%'
+      - '  &eY&7: &b%y%'
+      - '  &eZ&7: &b%z%'
+      - '  &eWorld&7: &b%world%'
+  teleport:
+    slot: 20
+    material: ENDER_PEARL
+    name: '&aTeleport'
+    lore:
+      - '%teleport_details%'
+  set-location:
+    slot: 29
+    material: RED_BANNER
+    name: '&eSet new location'
+    lore:
+      - '&eLocation&7:'
+      - '  &eX&7: &c%x% &7-> &a%new_x%'
+      - '  &eY&7: &c%y% &7-> &a%new_y%'
+      - '  &eZ&7: &c%z% &7-> &a%new_z%'
+      - '  &eWorld&7: &c%world% &7-> &a%new_world%'
+  change-icon:
+    slot: 22
+    material: ITEM_FRAME
+    name: '&eChange icon'
+    lore:
+      - '&7Click to change icon'
+  rename:
+    slot: 31
+    material: BARRIER
+    name: '&eRename home'
+    lore:
+      - '&7Current: &b%home%'
+      - ''
+      - '&cTemporarily disabled'
+  delete:
+    slot: 24
+    material: TNT
+    name: '&cDelete home'
+    lore:
+      - '&eClick to delete'
+  change-sound:
+    slot: 33
+    material: NOTE_BLOCK
+    name: '&eChange sound effect'
+    lore:
+      - '&7Current: &b%sound%'
+      - ''
+      - '&7Click to change sound effect'
+  back:
+    slot: 45
+    material: ARROW
+    name: '&aGo back'
+    lore:
+      - '&7To your home(s)'
+  close:
+    slot: 49
+    material: BARRIER
+    name: '&cClose'
+    lore: []

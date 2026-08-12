@@ -34,19 +34,24 @@ public class HomeConfirmDeleteMenu extends Menu {
 
         int max_homes = getMaxHomes(target);
         int current_homes = playerMenuUtility.getPlayerHomes().size();
-        return ColouredText(rep(getConfigMessage("GUI.names.home.delete-confirm.title"),
+        return getConfiguredTitle("GUI.names.home.delete-confirm.title",
                 "%name%", name,
                 "%displayname%", displayName,
                 "%timestamp%", updateTimestamp(),
                 "%chat_prefix%", chat_prefix,
                 "%home%", homeName,
                 "%current%", current_homes,
-                "%max%", max_homes));
+                "%max%", max_homes);
     }
 
     @Override
     public int getSlots() {
-        return 45;
+        return getConfiguredSlots(5);
+    }
+
+    @Override
+    protected String getMenuId() {
+        return "delete-confirm-menu";
     }
 
     @Override
@@ -66,18 +71,18 @@ public class HomeConfirmDeleteMenu extends Menu {
     public void handleMenuItems(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
         if (e.getCurrentItem() == null) return;
-        switch (e.getCurrentItem().getType()){
-            case LIME_CONCRETE:
+        switch (getAction(e)){
+            case "confirm-delete":
                 deleteHome(p, playerMenuUtility.getPlayerHome(), () -> {
                     playerMenuUtility.setPlayerHomes(getPlayerHomesList(playerMenuUtility.getTarget(), p, "CDM"));
                     new HomeListMenu(playerMenuUtility).open();
                 });
                 break;
-            case RED_CONCRETE:
-            case ARROW:
+            case "cancel":
+            case "back":
                 new HomeSettingsMenu(playerMenuUtility).open();
                 break;
-            case BARRIER:
+            case "close":
                 e.getWhoClicked().closeInventory();
                 break;
         }
@@ -96,25 +101,21 @@ public class HomeConfirmDeleteMenu extends Menu {
         String y = df.format(location.getY());
         String z = df.format(location.getZ());
         String world = location.getWorld().getName();
-        ItemStack info_item = createItemFromConfig(homeIconType, 1 , rep(getConfigMessage("GUI.names.home.settings.info-name"), "%home%", homeName),
-                getConfigMessageList("GUI.names.home.settings.info-lore").stream().map(s -> rep(s, "%x%", x, "%y%", y, "%z%", z, "%world%", world)).toList());
-        ItemStack confirm_button = createItemFromConfig("LIME_CONCRETE", 1, getConfigMessage("GUI.names.home.delete-confirm.confirm"), getConfigMessageList("GUI.names.home.delete-confirm.confirm-lore"));
-        ItemStack cancel_button = createItem("RED_CONCRETE", 1, getConfigMessage("GUI.names.home.delete-confirm.cancel"), "");
-        ItemStack back_button = createItem("ARROW", 1 , getConfigMessage("GUI.general.back"), getConfigMessage("GUI.general.back-lore-settings"));
-        ItemStack close_button = createItem("BARRIER", 1, getConfigMessage("GUI.general.close"));
+        ItemStack info_item = createConfiguredItem("buttons.info", "info", "%home%", homeName, "%x%", x, "%y%", y, "%z%", z, "%world%", world);
+        Integer infoSlot = me.dralle.home.HomePlugin.getMenuConfigManager().getSlot(getMenuId(), "buttons.info.slot", getSlots(), 4);
         if(homeIconType.equals("PLAYER_HEAD")){
             if(!Objects.equals(homeSkullMeta, "none")){
-                inventory.setItem(4, changePlayerHeadSkinByString(homeSkullMeta, info_item));
+                inventory.setItem(infoSlot, changePlayerHeadSkinByString(homeSkullMeta, info_item));
             }else{
-                inventory.setItem(4, info_item);
+                inventory.setItem(infoSlot, info_item);
             }
         }else{
-            inventory.setItem(4, info_item);
+            inventory.setItem(infoSlot, info_item);
         }
-        inventory.setItem(20, confirm_button);
-        inventory.setItem(24, cancel_button);
-        inventory.setItem(39, back_button);
-        inventory.setItem(40, close_button);
+        setButton("confirm", "confirm-delete");
+        setButton("cancel", "cancel");
+        setButton("back", "back");
+        setButton("close", "close");
 
         setFillerGlass();
     }

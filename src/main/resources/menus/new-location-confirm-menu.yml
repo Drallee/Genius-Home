@@ -1,0 +1,41 @@
+rows: 5
+title: '&rWanna set new location (&b%home%&r)?'
+filler:
+  enabled: true
+  material: GRAY_STAINED_GLASS_PANE
+  name: ''
+  slots: []
+buttons:
+  info:
+    slot: 4
+    material: PLAYER_HEAD
+    name: '&9%home%'
+    lore:
+      - '&eLocation&7:'
+      - '  &eX&7: &c%x% &7-> &a%new_x%'
+      - '  &eY&7: &c%y% &7-> &a%new_y%'
+      - '  &eZ&7: &c%z% &7-> &a%new_z%'
+      - '  &eWorld&7: &c%world% &7-> &a%new_world%'
+  confirm:
+    slot: 20
+    material: LIME_CONCRETE
+    name: '&aConfirm'
+    lore:
+      - '&7Your home will change its location and'
+      - '&c&lCANNOT be restored&7.'
+  cancel:
+    slot: 24
+    material: RED_CONCRETE
+    name: '&cCancel'
+    lore: []
+  back:
+    slot: 39
+    material: ARROW
+    name: '&aGo back'
+    lore:
+      - '&7To your home settings'
+  close:
+    slot: 40
+    material: BARRIER
+    name: '&cClose'
+    lore: []

@@ -32,19 +32,24 @@ public class HomeIconListMenu extends PaginatedMenu {
         String homeName = home.getHomeName();
         int max_homes = getMaxHomes(target);
         int current_homes = playerMenuUtility.getPlayerHomes().size();
-        return ColouredText(rep(getConfigMessage("GUI.names.home.icons.title"),
+        return getConfiguredTitle("GUI.names.home.icons.title",
                 "%name%", name,
                 "%displayname%", displayName,
                 "%timestamp%", updateTimestamp(),
                 "%chat_prefix%", chat_prefix,
                 "%home%", homeName,
                 "%current%", current_homes,
-                "%max%", max_homes));
+                "%max%", max_homes);
     }
 
     @Override
     public int getSlots() {
-        return 54;
+        return getConfiguredSlots(6);
+    }
+
+    @Override
+    protected String getMenuId() {
+        return "icon-menu";
     }
 
     @Override
@@ -68,42 +73,37 @@ public class HomeIconListMenu extends PaginatedMenu {
         ArrayList<String> icons = getHomeIcons();
 
         if (e.getCurrentItem() == null) return;
-        switch (Objects.requireNonNull(e.getCurrentItem()).getType()) {
-            case ARROW:
-                if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.previous-page")))) {
+        switch (getAction(e)) {
+            case "previous-page":
                     if (page == 0) {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-first-page")));
                     } else {
                         page = page - 1;
                         super.open();
                     }
-                } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.next-page")))) {
+                break;
+            case "next-page":
                     if (!((indexes + 1) >= icons.size())) {
                         page = page + 1;
                         super.open();
                     } else {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-last-page")));
                     }
-                } else if (StripColouredText(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.back")))) {
+                break;
+            case "back":
                     if (playerMenuUtility.getPlayerHome() != null) {
                         new HomeSettingsMenu(playerMenuUtility).open();
                     } else {
                         new HomeListMenu(playerMenuUtility).open();
                     }
-                }
                 break;
-            case BARRIER:
+            case "close":
                 p.closeInventory();
                 break;
         }
         
-        // Handle icon selection
-        int slot = e.getRawSlot();
-        if ((slot >= 10 && slot <= 16) || (slot >= 19 && slot <= 25) || (slot >= 28 && slot <= 34) || (slot >= 37 && slot <= 43)) {
-            int row = slot / 9;
-            int col = slot % 9;
-            int indexInPage = (row - 1) * 7 + (col - 1);
-            int actualIndex = page * getMaxItemsPerPage() + indexInPage;
+        Integer actualIndex = getClickedContentIndex(e.getRawSlot());
+        if (actualIndex != null) {
 
             if (actualIndex >= icons.size()) return;
             String materialName = icons.get(actualIndex);
@@ -128,8 +128,7 @@ public class HomeIconListMenu extends PaginatedMenu {
     public void setMenuItems() {
         addMenuBorderHomeIcons();
         ArrayList<String> icons = getHomeIcons();
-        ItemStack back_button = createItem("ARROW", 1 , getConfigMessage("GUI.general.back"), getConfigMessage("GUI.general.back-lore-homes"));
-        inventory.setItem(45, back_button);
+        setButton("back", "back");
         if(icons != null && !icons.isEmpty()) {
             for(int i = 0; i < getMaxItemsPerPage(); i++) {
                 int indexLoop = getMaxItemsPerPage() * page + i;
@@ -137,8 +136,8 @@ public class HomeIconListMenu extends PaginatedMenu {
                 String materialName = icons.get(indexLoop);
                 if (materialName != null){
                     String displayName = getIconDisplayName(materialName);
-                    ItemStack item = createItem(materialName, 1, rep(getConfigMessage("GUI.names.home.icons.generic-icon-name"), "%icon%", displayName), getConfigMessage("GUI.names.home.icons.generic-icon-lore"));
-                    inventory.addItem(item);
+                    ItemStack item = withAction(createItem(materialName, 1, rep(getConfigMessage("GUI.names.home.icons.generic-icon-name"), "%icon%", displayName), getConfigMessage("GUI.names.home.icons.generic-icon-lore")), "icon-item");
+                    inventory.setItem(getContentSlots().get(i), item);
                 }
             }
         }

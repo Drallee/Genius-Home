@@ -35,19 +35,24 @@ public class HomeSettingsMenu extends Menu {
         String homeName = home.getHomeName();
         int max_homes = getMaxHomes(target);
         int current_homes = playerMenuUtility.getPlayerHomes().size();
-        return ColouredText(rep(getConfigMessage("GUI.names.home.settings.title"),
+        return getConfiguredTitle("GUI.names.home.settings.title",
                 "%name%", name,
                 "%displayname%", displayName,
                 "%timestamp%", updateTimestamp(),
                 "%chat_prefix%", chat_prefix,
                 "%home%", homeName,
                 "%current%", current_homes,
-                "%max%", max_homes));
+                "%max%", max_homes);
     }
 
     @Override
     public int getSlots() {
-        return 54;
+        return getConfiguredSlots(6);
+    }
+
+    @Override
+    protected String getMenuId() {
+        return "home-settings-menu";
     }
 
     @Override
@@ -61,33 +66,33 @@ public class HomeSettingsMenu extends Menu {
 
         boolean isOwner = p.getUniqueId().equals(target.getUniqueId());
 
-        switch (e.getCurrentItem().getType()) {
-            case ITEM_FRAME -> {
+        switch (getAction(e)) {
+            case "change-icon" -> {
                 if (isOwner || p.hasPermission("genius.homes.others.settings.change.icons") || p.hasPermission("genius.others.settings")) {
                     new HomeIconListMenu(playerMenuUtility).open();
                 } else {
                     p.sendMessage(ColouredText(getErrorMessagePermission()));
                 }
             }
-            case NAME_TAG -> {
+            case "rename-home" -> {
                 p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1f, 1f);
                 p.sendMessage(ColouredText(getConfigMessage("chat.prefix.error") + " &cRenaming via GUI is temporarily disabled."));
             }
-            case TNT -> {
+            case "delete-home" -> {
                 if (isOwner || p.hasPermission("genius.homes.others.settings.delete") || p.hasPermission("genius.others.settings")) {
                     new HomeConfirmDeleteMenu(playerMenuUtility).open();
                 } else {
                     p.sendMessage(ColouredText(getErrorMessagePermission()));
                 }
             }
-            case ENDER_PEARL -> {
+            case "teleport-home" -> {
                 if (!isOwner && !p.hasPermission("genius.homes.others.teleport")) {
                     p.sendMessage(ColouredText(getErrorMessagePermission()));
                     return;
                 }
                 teleportToHome(p, target, home);
             }
-            case NOTE_BLOCK -> {
+            case "change-sound" -> {
                 if ((isOwner || p.hasPermission("genius.homes.others.settings.change.sounds") || p.hasPermission("genius.others.settings")) && HomePlugin.getSoundsConfig().getBoolean("sounds.enabled")) {
                     if (isOwner && getConfigCheck("settings.homes.sound-permission") && !p.hasPermission("genius.homes.sound")) {
                         p.sendMessage(ColouredText(getErrorMessagePermission()));
@@ -98,21 +103,26 @@ public class HomeSettingsMenu extends Menu {
                     p.sendMessage(ColouredText(getErrorMessagePermission()));
                 }
             }
-            case RED_BANNER -> {
+            case "set-location" -> {
                 if (isOwner || p.hasPermission("genius.homes.others.settings.new.location") || p.hasPermission("genius.others.settings")) {
                     new HomeConfirmNewLocation(playerMenuUtility).open();
                 } else {
                     p.sendMessage(ColouredText(getErrorMessagePermission()));
                 }
             }
-            case ARROW -> new HomeListMenu(playerMenuUtility).open();
-            case BARRIER -> {
+            case "back" -> new HomeListMenu(playerMenuUtility).open();
+            case "close" -> e.getWhoClicked().closeInventory();
+            case "disabled-rename" -> p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1f, 1f);
+            case "disabled-sound" -> p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
+            default -> {
+                if (e.getCurrentItem().getType() == org.bukkit.Material.BARRIER) {
                 if (e.getSlot() == 31) {
                     p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1f, 1f);
                 } else if (e.getSlot() == 33) {
                     p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
                 } else {
                     e.getWhoClicked().closeInventory();
+                }
                 }
             }
         }
@@ -137,16 +147,7 @@ public class HomeSettingsMenu extends Menu {
         String z = df.format(location.getZ());
         String world = location.getWorld().getName();
 
-        ItemStack info_item = createItemFromConfig(homeIconType, 1 , rep(getConfigMessage("GUI.names.home.settings.info-name"), "%home%", homeName),
-                getConfigMessageList("GUI.names.home.settings.info-lore").stream().map(s -> rep(s, "%x%", x, "%y%", y, "%z%", z, "%world%", world)).toList());
-        ItemStack delete_button = createItem("TNT", 1 , getConfigMessage("GUI.names.home.settings.delete"), getConfigMessage("GUI.names.home.settings.delete-lore"));
-        ItemStack set_new_location = createItemFromConfig("RED_BANNER", 1 , getConfigMessage("GUI.names.home.settings.set-location"),
-                getConfigMessageList("GUI.names.home.settings.set-location-lore").stream().map(s -> rep(s, "%x%", x, "%y%", y, "%z%", z, "%world%", world, "%new_x%", playerLocationX, "%new_y%", playerLocationY, "%new_z%", playerLocationZ, "%new_world%", playerWorld)).toList());
-        ItemStack change_icon = createItem("ITEM_FRAME", 1, getConfigMessage("GUI.names.home.settings.change-icon"), getConfigMessage("GUI.names.home.settings.change-icon-lore"));
-        ItemStack change_name = createItem("BARRIER", 1, getConfigMessage("GUI.names.home.settings.change-name"),
-                "&7Current: &b" + homeName,
-                "",
-                "&cTemporarily disabled");
+        ItemStack info_item = createConfiguredItem("buttons.info", "info", "%home%", homeName, "%x%", x, "%y%", y, "%z%", z, "%world%", world);
         
         List<String> teleportLore = new ArrayList<>(getConfigMessageList("GUI.names.home.settings.teleport-lore"));
         if (getConfigCheck("settings.homes.teleport.cost.enabled")) {
@@ -174,40 +175,27 @@ public class HomeSettingsMenu extends Menu {
                     .map(s -> rep(s, "%time%", time)).toList());
         }
 
-        ItemStack teleport_button = createItemFromConfig("ENDER_PEARL", 1 , getConfigMessage("GUI.names.home.settings.teleport"), teleportLore);
+        ItemStack teleport_button = createConfiguredItem("buttons.teleport", "teleport-home", "%teleport_details%", String.join("\n", teleportLore));
         
         String soundDisplayName = getSoundDisplayName(home.getSound());
-        ItemStack change_teleport_sound_button = createItemFromConfig("NOTE_BLOCK", 1 , getConfigMessage("GUI.names.home.settings.change-sound"),
-                getConfigMessageList("GUI.names.home.settings.change-sound-lore").stream().map(s -> rep(s, "%sound%", soundDisplayName)).toList());
+        ItemStack change_teleport_sound_button = createConfiguredItem("buttons.change-sound", "change-sound", "%sound%", soundDisplayName);
         if (!HomePlugin.getSoundsConfig().getBoolean("sounds.enabled")) {
-            change_teleport_sound_button = createItem("BARRIER", 1, getConfigMessage("GUI.names.home.settings.change-sound"), "&cThis feature is disabled");
+            change_teleport_sound_button = withAction(createItem("BARRIER", 1, getConfigMessage("GUI.names.home.settings.change-sound"), "&cThis feature is disabled"), "disabled-sound");
         } else if (getConfigCheck("settings.homes.sound-permission") && !p.hasPermission("genius.homes.sound")) {
-            change_teleport_sound_button = createItem("BARRIER", 1, getConfigMessage("GUI.names.home.settings.change-sound"),
-                    getConfigMessage("GUI.names.home.settings.change-sound-no-permission"), "&7Current: &b" + soundDisplayName);
-        }
-        ItemStack back_button = createItem("ARROW", 1 , getConfigMessage("GUI.general.back"), getConfigMessage("GUI.general.back-lore-homes"));
-        ItemStack close_button = createItem("BARRIER", 1, getConfigMessage("GUI.general.close"));
-        if(homeIconType.equals("PLAYER_HEAD")){
-            if(!Objects.equals(homeSkullMeta, "none")){
-                inventory.setItem(4, changePlayerHeadSkinByString(homeSkullMeta, info_item));
-            }else{
-                inventory.setItem(4, info_item);
-            }
-        }else{
-            inventory.setItem(4, info_item);
+            change_teleport_sound_button = withAction(createItem("BARRIER", 1, getConfigMessage("GUI.names.home.settings.change-sound"),
+                    getConfigMessage("GUI.names.home.settings.change-sound-no-permission"), "&7Current: &b" + soundDisplayName), "disabled-sound");
         }
 
-        inventory.setItem(20, teleport_button);
-        inventory.setItem(29, set_new_location);
-
-        inventory.setItem(22, change_icon);
-        inventory.setItem(31, change_name);
-
-        inventory.setItem(24, delete_button);
-        inventory.setItem(33, change_teleport_sound_button);
-
-        inventory.setItem(45, back_button);
-        inventory.setItem(49, close_button);
+        Integer infoSlot = HomePlugin.getMenuConfigManager().getSlot(getMenuId(), "buttons.info.slot", getSlots(), 4);
+        inventory.setItem(infoSlot, homeIconType.equals("PLAYER_HEAD") && !Objects.equals(homeSkullMeta, "none") ? changePlayerHeadSkinByString(homeSkullMeta, info_item) : info_item);
+        inventory.setItem(HomePlugin.getMenuConfigManager().getSlot(getMenuId(), "buttons.teleport.slot", getSlots(), 20), teleport_button);
+        setButton("set-location", "set-location", "%x%", x, "%y%", y, "%z%", z, "%world%", world, "%new_x%", playerLocationX, "%new_y%", playerLocationY, "%new_z%", playerLocationZ, "%new_world%", playerWorld);
+        setButton("change-icon", "change-icon");
+        setButton("rename", "disabled-rename", "%home%", homeName);
+        setButton("delete", "delete-home");
+        inventory.setItem(HomePlugin.getMenuConfigManager().getSlot(getMenuId(), "buttons.change-sound.slot", getSlots(), 33), change_teleport_sound_button);
+        setButton("back", "back");
+        setButton("close", "close");
 
         setFillerGlass();
     }

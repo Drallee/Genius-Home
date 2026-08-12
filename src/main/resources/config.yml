@@ -1,5 +1,9 @@
 configVersion: '1.0.0'
 
+# Language file loaded from plugins/Genius-Homes/language/<language>.yml.
+# Only en_US.yml is bundled by default. Server owners can add their own files.
+language: en_US
+
 settings:
   debug: false
   update-checker: true

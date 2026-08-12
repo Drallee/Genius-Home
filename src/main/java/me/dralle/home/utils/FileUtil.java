@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -53,6 +53,10 @@ public class FileUtil {
         return plugin.getResource(path);
     }
 
+    public static boolean exists(String pathTo) {
+        return new File(plugin.getDataFolder() + File.separator + pathTo).exists();
+    }
+
     public static YamlConfiguration loadFile(String pathTo, String internalPath) {
         File conf = new File(plugin.getDataFolder() + File.separator + pathTo);
         if (!conf.exists()) {
@@ -72,7 +76,7 @@ public class FileUtil {
             YamlConfiguration externalConfig = YamlConfiguration.loadConfiguration(conf);
             InputStream internalStream = getInputFromJar(internalPath);
             if (internalStream != null) {
-                YamlConfiguration internalConfig = YamlConfiguration.loadConfiguration(new java.io.InputStreamReader(internalStream));
+                YamlConfiguration internalConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(internalStream, StandardCharsets.UTF_8));
                 boolean updated = false;
                 for (String key : internalConfig.getKeys(true)) {
                     if (!externalConfig.contains(key)) {

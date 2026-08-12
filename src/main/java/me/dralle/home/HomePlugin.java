@@ -1,5 +1,6 @@
 package me.dralle.home;
 
+import me.dralle.home.menu.MenuConfigManager;
 import me.dralle.home.menu.PlayerMenuUtility;
 import me.dralle.home.commands.homeCommands.DelHomeCommand;
 import me.dralle.home.commands.homeCommands.HomeCommand;
@@ -12,6 +13,7 @@ import me.dralle.home.listeners.TeleportListener;
 import me.dralle.home.listeners.JoinLeaveListener;
 import me.dralle.home.utils.EconomyUtils;
 import me.dralle.home.utils.FileUtil;
+import me.dralle.home.utils.LanguageManager;
 import me.dralle.home.utils.UpdateChecker;
 import me.dralle.home.utils.Utils;
 import org.bstats.bukkit.Metrics;
@@ -30,8 +32,9 @@ public final class HomePlugin extends JavaPlugin {
     private static HomePlugin instance;
     private static FileConfiguration homeConfig;
     private static FileConfiguration iconsConfig;
-    private static FileConfiguration messagesConfig;
     private static FileConfiguration soundsConfig;
+    private static LanguageManager languageManager;
+    private static MenuConfigManager menuConfigManager;
     private static final HashMap<Player, PlayerMenuUtility> playerMenuUtilityMap = new HashMap<>();
     private String latestVersion;
     private boolean updateAvailable = false;
@@ -48,8 +51,11 @@ public final class HomePlugin extends JavaPlugin {
         new FileUtil(this);
         homeConfig = FileUtil.loadFile("config.yml", "config.yml");
         iconsConfig = FileUtil.loadFile("home-icons.yml", "home-icons.yml");
-        messagesConfig = FileUtil.loadFile("messages.yml", "messages.yml");
         soundsConfig = FileUtil.loadFile("home-sounds.yml", "home-sounds.yml");
+        languageManager = new LanguageManager(this);
+        languageManager.reload();
+        menuConfigManager = new MenuConfigManager(this);
+        menuConfigManager.reload();
 
         // Economy setup
         if (!EconomyUtils.setupEconomy()) {
@@ -127,8 +133,9 @@ public final class HomePlugin extends JavaPlugin {
     public void reloadConfigs() {
         homeConfig = FileUtil.loadFile("config.yml", "config.yml");
         iconsConfig = FileUtil.loadFile("home-icons.yml", "home-icons.yml");
-        messagesConfig = FileUtil.loadFile("messages.yml", "messages.yml");
         soundsConfig = FileUtil.loadFile("home-sounds.yml", "home-sounds.yml");
+        languageManager.reload();
+        menuConfigManager.reload();
     }
 
     public static HomePlugin getInstance() {
@@ -144,11 +151,19 @@ public final class HomePlugin extends JavaPlugin {
     }
 
     public static FileConfiguration getMessagesConfig() {
-        return messagesConfig;
+        return languageManager.getActiveLanguage();
     }
 
     public static FileConfiguration getSoundsConfig() {
         return soundsConfig;
+    }
+
+    public static LanguageManager getLanguageManager() {
+        return languageManager;
+    }
+
+    public static MenuConfigManager getMenuConfigManager() {
+        return menuConfigManager;
     }
 
     public static PlayerMenuUtility getPlayerMenuUtility(Player p) {

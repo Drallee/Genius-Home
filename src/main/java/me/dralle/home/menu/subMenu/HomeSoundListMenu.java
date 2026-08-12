@@ -35,19 +35,24 @@ public class HomeSoundListMenu extends PaginatedMenu {
         String homeName = home.getHomeName();
         int max_homes = HomeUtils.getMaxHomes(target);
         int current_homes = playerMenuUtility.getPlayerHomes().size();
-        return ColouredText(rep(getConfigMessage("GUI.names.home.sounds.title"),
+        return getConfiguredTitle("GUI.names.home.sounds.title",
                 "%name%", name,
                 "%displayname%", displayName,
                 "%timestamp%", updateTimestamp(),
                 "%chat_prefix%", chat_prefix,
                 "%home%", homeName,
                 "%current%", current_homes,
-                "%max%", max_homes));
+                "%max%", max_homes);
     }
 
     @Override
     public int getSlots() {
-        return 54;
+        return getConfiguredSlots(6);
+    }
+
+    @Override
+    protected String getMenuId() {
+        return "sound-menu";
     }
 
     @Override
@@ -77,35 +82,34 @@ public class HomeSoundListMenu extends PaginatedMenu {
         List<Map<?, ?>> sounds = HomePlugin.getSoundsConfig().getMapList("sounds.list");
 
         if (e.getCurrentItem() == null) return;
-        switch (Objects.requireNonNull(e.getCurrentItem()).getType()) {
-            case ARROW:
-                if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.previous-page")))) {
+        switch (getAction(e)) {
+            case "previous-page":
                     if (page == 0) {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-first-page")));
                     } else {
                         page = page - 1;
                         super.open();
                     }
-                } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.next-page")))) {
+                break;
+            case "next-page":
                     if (!((indexes + 1) >= sounds.size())) {
                         page = page + 1;
                         super.open();
                     } else {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-last-page")));
                     }
-                } else if (StripColouredText(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.back")))) {
-                    new HomeSettingsMenu(playerMenuUtility).open();
-                }
                 break;
-            case BARRIER:
-                if (e.getRawSlot() >= 10 && e.getRawSlot() <= 43) {
+            case "back":
+                    new HomeSettingsMenu(playerMenuUtility).open();
+                break;
+            case "close":
+                p.closeInventory();
+                break;
+            case "sound-no-permission":
                     p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
-                } else {
-                    p.closeInventory();
-                }
                 break;
             default:
-                if (e.getRawSlot() >= 10 && e.getRawSlot() <= 43) {
+                if (getClickedContentIndex(e.getRawSlot()) != null) {
                     // Let's just find it by display name from the config list.
                     String clickedDisplayName = StripColouredText(e.getCurrentItem().getItemMeta().getDisplayName());
                     for (Map<?, ?> soundMap : sounds) {
@@ -149,35 +153,9 @@ public class HomeSoundListMenu extends PaginatedMenu {
 
     @Override
     public void setMenuItems() {
-        getSoundsIndexes();
-        // Menu Border logic similar to addMenuBorderHomeIcons but for sounds
-        if(page != 0){
-            String displayName = getConfigMessage("GUI.general.previous-page");
-            String lore = rep(getConfigMessage("GUI.general.page-lore"), "%current%", (page + 1), "%total%", pages);
-            inventory.setItem(48, createItem("ARROW", 1, displayName, lore));
-        }
+        addMenuBorderSounds();
         List<Map<?, ?>> sounds = HomePlugin.getSoundsConfig().getMapList("sounds.list");
-        if (!((indexes + 1) >= sounds.size())){
-            String displayName = getConfigMessage("GUI.general.next-page");
-            String lore = rep(getConfigMessage("GUI.general.page-lore"), "%current%", (page + 1), "%total%", pages);
-            inventory.setItem(50, createItem("ARROW", 1, displayName, lore));
-        }
-        inventory.setItem(49, createItem("BARRIER", 1, getConfigMessage("GUI.general.close")));
-        for (int i = 0; i < 10; i++) {
-            if (inventory.getItem(i) == null) inventory.setItem(i, FILLER_GLASS);
-        }
-        inventory.setItem(17, FILLER_GLASS);
-        inventory.setItem(18, FILLER_GLASS);
-        inventory.setItem(26, FILLER_GLASS);
-        inventory.setItem(27, FILLER_GLASS);
-        inventory.setItem(35, FILLER_GLASS);
-        inventory.setItem(36, FILLER_GLASS);
-        for (int i = 44; i < 54; i++) {
-            if (inventory.getItem(i) == null) inventory.setItem(i, FILLER_GLASS);
-        }
-
-        ItemStack back_button = createItem("ARROW", 1 , getConfigMessage("GUI.general.back"), getConfigMessage("GUI.general.back-lore-settings"));
-        inventory.setItem(45, back_button);
+        setButton("back", "back");
 
         if(!sounds.isEmpty()) {
             for(int i = 0; i < getMaxItemsPerPage(); i++) {
@@ -198,11 +176,11 @@ public class HomeSoundListMenu extends PaginatedMenu {
                 }
 
                 if (getConfigCheck("settings.homes.per-sound-permission") && !hasSoundPerm) {
-                    item = createItem("BARRIER", 1, displayName, getConfigMessage("GUI.names.home.settings.change-sound-no-permission-individual"));
+                    item = withAction(createItem("BARRIER", 1, displayName, getConfigMessage("GUI.names.home.settings.change-sound-no-permission-individual")), "sound-no-permission");
                 } else {
-                    item = createItemFromConfig(material, 1, displayName, getConfigMessageList("GUI.names.home.sounds.item-lore"));
+                    item = withAction(createItemFromConfig(material, 1, displayName, getConfigMessageList("GUI.names.home.sounds.item-lore")), "sound-item");
                 }
-                inventory.addItem(item);
+                inventory.setItem(getContentSlots().get(i), item);
             }
         }
     }

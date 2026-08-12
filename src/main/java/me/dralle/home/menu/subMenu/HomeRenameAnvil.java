@@ -30,12 +30,17 @@ public class HomeRenameAnvil extends Menu {
     @Override
     public String getMenuName() {
         Home home = playerMenuUtility.getPlayerHome();
-        return ColouredText(rep(getConfigMessage("GUI.names.home.rename.title"), "%home%", home.getHomeName()));
+        return getConfiguredTitle("GUI.names.home.rename.title", "%home%", home.getHomeName());
     }
 
     @Override
     public int getSlots() {
         return 0; // Not used for Anvil
+    }
+
+    @Override
+    protected String getMenuId() {
+        return "rename-menu";
     }
 
     @Override

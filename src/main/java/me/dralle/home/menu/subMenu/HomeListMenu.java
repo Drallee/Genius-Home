@@ -32,22 +32,22 @@ public class HomeListMenu extends PaginatedMenu {
         int max_homes = getMaxHomes(target);
         int current_homes = playerMenuUtility.getPlayerHomes().size();
         String title;
-        title = ColouredText(rep(getConfigMessage("GUI.names.home.list.homes"),
+        title = getConfiguredTitle("GUI.names.home.list.homes",
                 "%name%", name,
                 "%displayname%", displayName,
                 "%timestamp%", updateTimestamp(),
                 "%chat_prefix%", chat_prefix,
                 "%current%", current_homes,
-                "%max%", max_homes));
+                "%max%", max_homes);
         if (!p.getUniqueId().equals(target.getUniqueId())){
-            title = ColouredText(rep(getConfigMessage("GUI.names.home.others.list"),
+            title = getConfiguredTitle("GUI.names.home.others.list",
                     "%name%", name,
                     "%displayname%", displayName,
                     "%timestamp%", updateTimestamp(),
                     "%target%", target_name,
                     "%chat_prefix%", chat_prefix,
                     "%current%", current_homes,
-                    "%max%", max_homes));
+                    "%max%", max_homes);
 
         }
         return title;
@@ -55,7 +55,12 @@ public class HomeListMenu extends PaginatedMenu {
 
     @Override
     public int getSlots() {
-        return 54;
+        return getConfiguredSlots(6);
+    }
+
+    @Override
+    protected String getMenuId() {
+        return "home-menu";
     }
 
     @Override
@@ -66,26 +71,24 @@ public class HomeListMenu extends PaginatedMenu {
 
         if (e.getCurrentItem() == null) return;
 
-        switch (e.getCurrentItem().getType()){
-            case ARROW:
-                String displayName = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
-                if (displayName.equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.previous-page")))){
+        switch (getAction(e)){
+            case "previous-page":
                     if (page > 0){
                         page--;
                         super.open();
                     } else {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-first-page")));
                     }
-                } else if (displayName.equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.next-page")))){
+                break;
+            case "next-page":
                     if ((indexes + 1) < homes.size()){
                         page++;
                         super.open();
                     } else {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-last-page")));
                     }
-                }
                 break;
-            case WHITE_BED:
+            case "create-home":
                 if(homes.isEmpty()){
                     setHome(p, "Default", "RED_BED", "none", () -> {
                         playerMenuUtility.setPlayerHomes(getPlayerHomesList(p, p, "PHL"));
@@ -93,12 +96,13 @@ public class HomeListMenu extends PaginatedMenu {
                     });
                 }
                 break;
-            case BARRIER:
+            case "close":
                 p.closeInventory();
                 break;
         }
 
-        if (e.getRawSlot() >= 10 && e.getRawSlot() <= 43) {
+        Integer contentIndex = getClickedContentIndex(e.getRawSlot());
+        if (contentIndex != null) {
             String itemDisplayName = StripColouredText(e.getCurrentItem().getItemMeta().getDisplayName());
             Home selectedHome = playerMenuUtility.getHomeByName(itemDisplayName);
             if (selectedHome != null) {
@@ -188,18 +192,18 @@ public class HomeListMenu extends PaginatedMenu {
                                 .map(s -> rep(s, "%time%", time)).toList());
                     }
 
-                    homeItem = createItemFromConfig(icon, 1, "&b" + homeName, lore);
+                    homeItem = withAction(createItemFromConfig(icon, 1, "&b" + homeName, lore), "home-item");
                     
                     if(icon.equalsIgnoreCase("PLAYER_HEAD") && !skullMeta.equalsIgnoreCase("none")){
-                        inventory.addItem(PlayerHeadUtils.changePlayerHeadSkinByString(skullMeta, homeItem));
+                        inventory.setItem(getContentSlots().get(i), PlayerHeadUtils.changePlayerHeadSkinByString(skullMeta, homeItem));
                     }else {
-                        inventory.addItem(homeItem);
+                        inventory.setItem(getContentSlots().get(i), homeItem);
                     }
                }
             }
         } else {
             if (p.getUniqueId().equals(target.getUniqueId())) {
-                inventory.setItem(22, createItem("WHITE_BED", 1, getConfigMessage("GUI.names.home.list.create"), getConfigMessage("GUI.names.home.list.create-lore")));
+                setButton("create-home", "create-home");
             }
         }
     }

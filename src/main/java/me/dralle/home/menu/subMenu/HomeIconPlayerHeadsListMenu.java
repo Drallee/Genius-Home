@@ -34,19 +34,24 @@ public class HomeIconPlayerHeadsListMenu extends PaginatedMenu {
         String homeName = home.getHomeName();
         int max_homes = getMaxHomes(target);
         int current_homes = playerMenuUtility.getPlayerHomes().size();
-        return ColouredText(rep(getConfigMessage("GUI.names.home.icons.title-heads"),
+        return getConfiguredTitle("GUI.names.home.icons.title-heads",
                 "%name%", name,
                 "%displayname%", displayName,
                 "%timestamp%", updateTimestamp(),
                 "%chat_prefix%", chat_prefix,
                 "%home%", homeName,
                 "%current%", current_homes,
-                "%max%", max_homes));
+                "%max%", max_homes);
     }
 
     @Override
     public int getSlots() {
-        return 54;
+        return getConfiguredSlots(6);
+    }
+
+    @Override
+    protected String getMenuId() {
+        return "player-heads-menu";
     }
 
     @Override
@@ -57,36 +62,35 @@ public class HomeIconPlayerHeadsListMenu extends PaginatedMenu {
         ArrayList<String> icons = getHomeIconsPlayerHeads();
 
         if (e.getCurrentItem() == null) return;
-        switch (Objects.requireNonNull(e.getCurrentItem()).getType()) {
-            case ARROW:
-                if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.previous-page")))) {
+        switch (getAction(e)) {
+            case "previous-page":
                     if (page == 0) {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-first-page")));
                     } else {
                         page = page - 1;
                         super.open();
                     }
-                } else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.next-page")))) {
+                break;
+            case "next-page":
                     if (!((indexes + 1) >= icons.size())) {
                         page = page + 1;
                         super.open();
                     } else {
                         p.sendMessage(ColouredText(getConfigMessage("GUI.general.already-last-page")));
                     }
-                } else if (StripColouredText(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase(StripColouredText(getConfigMessage("GUI.general.back")))) {
+                break;
+            case "back":
                     if (playerMenuUtility.getPlayerHome() != null) {
                         new HomeIconListMenu(playerMenuUtility).open();
                     } else {
                         new HomeListMenu(playerMenuUtility).open();
                     }
-                }
                 break;
-            case BARRIER:
+            case "close":
                 p.closeInventory();
                 break;
         }
-        switch (e.getRawSlot()) {
-            case 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43 -> {
+        if (getClickedContentIndex(e.getRawSlot()) != null) {
                 String item = StripColouredText(e.getCurrentItem().getType().toString());
                 String skullMetaFinal = "none";
                 if(e.getCurrentItem().getType().toString().equals("PLAYER_HEAD")){
@@ -108,27 +112,26 @@ public class HomeIconPlayerHeadsListMenu extends PaginatedMenu {
                         new HomeListMenu(playerMenuUtility).open();
                     }
                 });
-            }
         }
     }
 
     @Override
     public void setMenuItems() {
         addMenuBorderPlayerHeads();
-        ItemStack back_button = createItem("ARROW", 1 , getConfigMessage("GUI.general.back"), getConfigMessage("GUI.general.back-lore-homes"));
-        inventory.setItem(45, back_button);
-        ItemStack head = changePlayerHeadSkinByString("MHF_steve", createItem("PLAYER_HEAD", 1, getConfigMessage("GUI.names.home.icons.heads-item"), getConfigMessage("GUI.names.home.icons.heads-item-lore")));
-        ItemStack head_alex = changePlayerHeadSkinByString("MHF_alex", createItem("PLAYER_HEAD", 1, getConfigMessage("GUI.names.home.icons.alex-item"), getConfigMessage("GUI.names.home.icons.alex-item-lore")));
-        inventory.addItem(head);
-        inventory.addItem(head_alex);
+        setButton("back", "back");
+        int slotIndex = 0;
+        ItemStack head = withAction(changePlayerHeadSkinByString("MHF_steve", createItem("PLAYER_HEAD", 1, getConfigMessage("GUI.names.home.icons.heads-item"), getConfigMessage("GUI.names.home.icons.heads-item-lore"))), "head-item");
+        ItemStack head_alex = withAction(changePlayerHeadSkinByString("MHF_alex", createItem("PLAYER_HEAD", 1, getConfigMessage("GUI.names.home.icons.alex-item"), getConfigMessage("GUI.names.home.icons.alex-item-lore"))), "head-item");
+        inventory.setItem(getContentSlots().get(slotIndex++), head);
+        inventory.setItem(getContentSlots().get(slotIndex++), head_alex);
         ArrayList<String> icons = getHomeIconsPlayerHeads();
         if(icons != null && !icons.isEmpty()) {
-            for(int i = 0; i < getMaxItemsPerPage(); i++) {
+            for(int i = 0; i < getMaxItemsPerPage() - slotIndex; i++) {
                 int indexLoop = getMaxItemsPerPage() * page + i;
                 if(indexLoop >= icons.size()) break;
                 if (icons.get(indexLoop) != null){
                     ItemStack item = createItem("PLAYER_HEAD", 1, rep(getConfigMessage("GUI.names.home.icons.generic-icon-name"), "%icon%", icons.get(indexLoop)), getConfigMessage("GUI.names.home.icons.generic-icon-lore"));
-                    inventory.addItem(changePlayerHeadSkinByString(icons.get(indexLoop), item));
+                    inventory.setItem(getContentSlots().get(slotIndex + i), withAction(changePlayerHeadSkinByString(icons.get(indexLoop), item), "head-item"));
                 }
             }
         }
