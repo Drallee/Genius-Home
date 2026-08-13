@@ -347,9 +347,7 @@ If language text is missing:
 
 Join the Discord for setup help and support:
 
-```text
-TODO: add Discord invite link
-```
+https://discord.gg/2kXkEUMeta
 
 When asking for help, include:
 

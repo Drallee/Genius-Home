@@ -98,15 +98,13 @@ language: en_US
 
 Only `en_US.yml` is included by default. To add a translation, copy `language/en_US.yml`, rename it, translate the values, and set `language:` to the new file name without `.yml`.
 
-For full setup and customization instructions, see [the wiki guide](wiki/Configuration-Guide.md).
+For full setup and customization instructions, see [the wiki](wiki/Home.md).
 
 ## Support
 
 For help, setup questions, and community support, join the Discord:
 
-```text
-TODO: add Discord invite link
-```
+https://discord.gg/2kXkEUMeta
 
 Before asking for help, please include:
 
