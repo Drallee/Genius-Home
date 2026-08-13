@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
 
     <name>Genius-Homes</name>
-    <description>Genius-Homes is a robust and highly customizable Minecraft home management plugin featuring GUI-based navigation, multiple database support (MySQL/SQLite), teleportation costs, cooldowns, and full localization.</description>
+    <description>Genius-Homes is a configurable Minecraft homes plugin for Paper servers. It provides GUI-based home management, SQLite or MySQL storage, teleport cooldowns, optional teleport costs, per-player home limits, localization, and configurable menu layouts.</description>
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -44,7 +44,20 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>me.dralle.home.bstats</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>net.wesjd.anvilgui</pattern>
+                            <shadedPattern>me.dralle.home.anvilgui</shadedPattern>
+                        </relocation>
                     </relocations>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludeDefaults>false</excludeDefaults>
+                            <includes>
+                                <include>net/wesjd/anvilgui/**</include>
+                            </includes>
+                        </filter>
+                    </filters>
                 </configuration>
                 <executions>
                     <execution>
@@ -74,6 +87,10 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
+            <id>mvn-wesjd-net</id>
+            <url>https://mvn.wesjd.net/</url>
+        </repository>
+        <repository>
             <id>CodeMC</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
@@ -97,6 +114,12 @@
             <artifactId>VaultAPI</artifactId>
             <version>1.7.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.wesjd</groupId>
+            <artifactId>anvilgui</artifactId>
+            <version>1.10.13-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

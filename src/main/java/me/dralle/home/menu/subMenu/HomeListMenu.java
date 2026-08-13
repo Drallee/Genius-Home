@@ -1,10 +1,10 @@
 package me.dralle.home.menu.subMenu;
 
+import me.dralle.home.HomePlugin;
 import me.dralle.home.models.Home;
 import me.dralle.home.menu.PaginatedMenu;
 import me.dralle.home.menu.PlayerMenuUtility;
 import me.dralle.home.utils.PlayerHeadUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -89,11 +89,8 @@ public class HomeListMenu extends PaginatedMenu {
                     }
                 break;
             case "create-home":
-                if(homes.isEmpty()){
-                    setHome(p, "Default", "RED_BED", "none", () -> {
-                        playerMenuUtility.setPlayerHomes(getPlayerHomesList(p, p, "PHL"));
-                        new HomeListMenu(playerMenuUtility).open();
-                    });
+                if (p.getUniqueId().equals(target.getUniqueId())) {
+                    HomePlugin.getHomeTextInputService().openCreateHomeInput(p, playerMenuUtility);
                 }
                 break;
             case "close":
@@ -201,8 +198,11 @@ public class HomeListMenu extends PaginatedMenu {
                     }
                }
             }
-        } else {
-            if (p.getUniqueId().equals(target.getUniqueId())) {
+        }
+
+        if (p.getUniqueId().equals(target.getUniqueId())) {
+            int maxHomes = getMaxHomes(target);
+            if (maxHomes == -1 || homes.size() < maxHomes) {
                 setButton("create-home", "create-home");
             }
         }
