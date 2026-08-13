@@ -1,6 +1,8 @@
 package me.dralle.home.commands.homeCommands;
 
 import me.dralle.home.HomePlugin;
+import me.dralle.home.input.HomeNameValidator;
+import me.dralle.home.input.TextInputValidationResult;
 import me.dralle.home.utils.HomeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -26,7 +28,7 @@ public class SetHomeCommand implements CommandExecutor {
         }
 
         if (args.length < 1) {
-            p.sendMessage(ColouredText(rep(getConfigMessage("chat.message.error.player.command.usage"), "%usage%", "/sethome <name>")));
+            HomePlugin.getHomeTextInputService().openCreateHomeInput(p);
             return true;
         }
 
@@ -34,14 +36,19 @@ public class SetHomeCommand implements CommandExecutor {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             int max = HomeUtils.getMaxHomes(p);
             int current = HomeUtils.getCurrentHomes(p, p);
+            TextInputValidationResult validation = new HomeNameValidator().validate(p, homeName, HomeNameValidator.Mode.CREATE, null);
 
             Bukkit.getScheduler().runTask(plugin, () -> {
                 if (max != -1 && current >= max) {
                     p.sendMessage(ColouredText(rep(getConfigMessage("chat.message.error.player.command.max-homes"), "%max%", max, "%chat_prefix%", getConfigMessage("chat.prefix.error"))));
                     return;
                 }
+                if (!validation.isValid()) {
+                    p.sendMessage(ColouredText(rep(validation.getErrorMessage(), "%chat_prefix%", getConfigMessage("chat.prefix.error"))));
+                    return;
+                }
 
-                HomeUtils.setHome(p, homeName, "RED_BED", "none");
+                HomeUtils.setHome(p, validation.getValue(), "RED_BED", "none");
             });
         });
         return true;

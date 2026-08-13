@@ -20,6 +20,11 @@ settings:
     per-world: false
     need-permission: true
     max-amount: 28
+    names:
+      min-length: 1
+      max-length: 32
+      # Java regex. Default allows letters, numbers, underscores, and hyphens.
+      allowed-pattern: '^[A-Za-z0-9_-]+$'
     rename-permission: false
     sound-permission: false
     per-sound-permission: false

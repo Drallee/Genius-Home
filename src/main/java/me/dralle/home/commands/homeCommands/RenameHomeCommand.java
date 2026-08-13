@@ -1,7 +1,10 @@
 package me.dralle.home.commands.homeCommands;
 
 import me.dralle.home.HomePlugin;
+import me.dralle.home.input.HomeNameValidator;
+import me.dralle.home.input.TextInputValidationResult;
 import me.dralle.home.utils.HomeUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,7 +60,16 @@ public class RenameHomeCommand implements CommandExecutor, TabCompleter {
         String oldName = args[0];
         String newName = args[1];
 
-        HomeUtils.changeHomeName(p, oldName, newName);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            TextInputValidationResult validation = new HomeNameValidator().validate(p, newName, HomeNameValidator.Mode.RENAME, oldName);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (!validation.isValid()) {
+                    p.sendMessage(ColouredText(rep(validation.getErrorMessage(), "%chat_prefix%", getConfigMessage("chat.prefix.error"))));
+                    return;
+                }
+                HomeUtils.changeHomeName(p, oldName, validation.getValue());
+            });
+        });
         return true;
     }
 }

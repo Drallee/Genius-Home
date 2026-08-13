@@ -3,7 +3,11 @@
 
 # Keep only the files needed to build and run the plugin.
 !/.gitignore
+!/LICENSE
+!/README.md
 !/pom.xml
 !/src/
 !/src/main/
 !/src/main/**
+!/wiki/
+!/wiki/**
