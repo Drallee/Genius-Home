@@ -14,6 +14,7 @@ import me.dralle.home.database.DatabaseUtil;
 import me.dralle.home.listeners.MenuListener;
 import me.dralle.home.listeners.TeleportListener;
 import me.dralle.home.listeners.JoinLeaveListener;
+import me.dralle.home.utils.DebugLogger;
 import me.dralle.home.utils.EconomyUtils;
 import me.dralle.home.utils.FileUtil;
 import me.dralle.home.utils.LanguageManager;
@@ -54,6 +55,7 @@ public final class HomePlugin extends JavaPlugin {
 
         // Load configurations
         new FileUtil(this);
+        DebugLogger.initialize(this);
         homeConfig = FileUtil.loadFile("config.yml", "config.yml");
         iconsConfig = FileUtil.loadFile("home-icons.yml", "home-icons.yml");
         soundsConfig = FileUtil.loadFile("home-sounds.yml", "home-sounds.yml");
@@ -67,6 +69,7 @@ public final class HomePlugin extends JavaPlugin {
         // Economy setup
         if (!EconomyUtils.setupEconomy()) {
             getLogger().warning("Vault not found or no economy plugin found! Vault features will be disabled.");
+            DebugLogger.warning("Vault not found or no economy plugin found! Vault features will be disabled.");
         }
 
         // Database setup
@@ -108,6 +111,7 @@ public final class HomePlugin extends JavaPlugin {
                     getLogger().info("Current version: " + this.getDescription().getVersion());
                     getLogger().info("Latest version: " + version);
                     getLogger().info("Download it at: https://modrinth.com/plugin/genius-homes");
+                    DebugLogger.warning("A new update is available. Current version: " + this.getDescription().getVersion() + ", latest version: " + version);
                 }
             });
         }

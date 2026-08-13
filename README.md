@@ -2,8 +2,6 @@
 
 Genius-Homes is a configurable Minecraft homes plugin for Paper servers. It provides GUI-based home management, SQLite or MySQL storage, teleport cooldowns, optional teleport costs, per-player home limits, localization, and configurable menu layouts.
 
-> Status: unreleased. The plugin is being prepared for public release.
-
 ## Features
 
 - `/home`, `/sethome`, `/delhome`, `/homes`, and `/home-rename` commands
@@ -68,6 +66,12 @@ Genius-Homes is a configurable Minecraft homes plugin for Paper servers. It prov
 
 ## Configuration
 
+Plugin metadata, command registration, and permission defaults are defined in:
+
+```text
+src/main/resources/plugin.yml
+```
+
 Main settings are generated in:
 
 ```text
@@ -121,6 +125,7 @@ Use GitHub Issues for bugs and feature requests. A good bug report includes:
 - Steps to reproduce
 - Server version and plugin version
 - Full console error or stack trace
+- `plugins/Genius-Homes/debug.log`
 - Any changed config files related to the issue
 
 Do not paste private database credentials, IP addresses, tokens, or other secrets into public issues.

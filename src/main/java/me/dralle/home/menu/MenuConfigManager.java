@@ -42,6 +42,7 @@ public class MenuConfigManager {
         FileConfiguration config = menus.get(menuId);
         if (config == null) {
             plugin.getLogger().warning("Menu config '" + menuId + "' was not loaded. Using empty defaults.");
+            me.dralle.home.utils.DebugLogger.warning("Menu config '" + menuId + "' was not loaded. Using empty defaults.");
         }
         return config;
     }
@@ -51,6 +52,7 @@ public class MenuConfigManager {
         int rows = config == null ? fallbackRows : config.getInt("rows", fallbackRows);
         if (rows < 1 || rows > 6) {
             plugin.getLogger().warning("menus/" + menuId + ".yml has invalid rows value '" + rows + "'. Using " + fallbackRows + ".");
+            me.dralle.home.utils.DebugLogger.warning("menus/" + menuId + ".yml has invalid rows value '" + rows + "'. Using " + fallbackRows + ".");
             return fallbackRows;
         }
         return rows;
@@ -75,6 +77,7 @@ public class MenuConfigManager {
         int slot = config.getInt(path, fallback == null ? -1 : fallback);
         if (slot < 0 || slot >= inventorySize) {
             plugin.getLogger().warning("menus/" + menuId + ".yml path '" + path + "' uses invalid slot " + slot + ".");
+            me.dralle.home.utils.DebugLogger.warning("menus/" + menuId + ".yml path '" + path + "' uses invalid slot " + slot + ".");
             return fallback;
         }
         return slot;
@@ -94,6 +97,7 @@ public class MenuConfigManager {
                 Integer slot = getSlot(menuId, "buttons." + key + ".slot", inventorySize, null);
                 if (slot == null && buttons.getConfigurationSection(key).isSet("slot")) {
                     plugin.getLogger().warning("menus/" + menuId + ".yml button '" + key + "' has no valid slot and will not render.");
+                    me.dralle.home.utils.DebugLogger.warning("menus/" + menuId + ".yml button '" + key + "' has no valid slot and will not render.");
                 }
             }
         }
@@ -106,6 +110,7 @@ public class MenuConfigManager {
         String materialName = config.getString(path + ".material", "BARRIER");
         if (Material.matchMaterial(materialName) == null) {
             plugin.getLogger().warning("menus/" + menuId + ".yml path '" + path + ".material' uses invalid material '" + materialName + "'. BARRIER will be used.");
+            me.dralle.home.utils.DebugLogger.warning("menus/" + menuId + ".yml path '" + path + ".material' uses invalid material '" + materialName + "'. BARRIER will be used.");
         }
     }
 
@@ -133,6 +138,7 @@ public class MenuConfigManager {
                 }
             } catch (NumberFormatException ex) {
                 plugin.getLogger().warning("menus/" + menuId + ".yml path '" + path + "' contains invalid slot range '" + value + "'.");
+                me.dralle.home.utils.DebugLogger.warning("menus/" + menuId + ".yml path '" + path + "' contains invalid slot range '" + value + "'.");
             }
             return;
         }
@@ -141,12 +147,14 @@ public class MenuConfigManager {
             addSlot(slots, Integer.parseInt(trimmed), inventorySize, menuId, path);
         } catch (NumberFormatException ex) {
             plugin.getLogger().warning("menus/" + menuId + ".yml path '" + path + "' contains invalid slot '" + value + "'.");
+            me.dralle.home.utils.DebugLogger.warning("menus/" + menuId + ".yml path '" + path + "' contains invalid slot '" + value + "'.");
         }
     }
 
     private void addSlot(List<Integer> slots, int slot, int inventorySize, String menuId, String path) {
         if (slot < 0 || slot >= inventorySize) {
             plugin.getLogger().warning("menus/" + menuId + ".yml path '" + path + "' contains out-of-range slot " + slot + ".");
+            me.dralle.home.utils.DebugLogger.warning("menus/" + menuId + ".yml path '" + path + "' contains out-of-range slot " + slot + ".");
             return;
         }
         if (!slots.contains(slot)) {

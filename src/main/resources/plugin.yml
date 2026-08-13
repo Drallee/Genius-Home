@@ -1,0 +1,79 @@
+name: Genius-Homes
+version: ${project.version}
+main: me.dralle.home.HomePlugin
+api-version: '1.21'
+description: Genius-Homes is a configurable Minecraft homes plugin for Paper servers.
+commands:
+  home:
+    description: Open homes menu or teleport to home
+    usage: /<command> [home]
+  sethome:
+    description: Set a new home
+    usage: /<command> [name]
+  delhome:
+    description: Delete a home
+    usage: /<command> <name>
+  home-rename:
+    description: Rename a home
+    usage: /<command> <old> <new>
+  homes:
+    description: List all homes
+    usage: /<command> [player]
+  reload-home-config:
+    description: Reload home configuration
+    usage: /<command>
+permissions:
+  genius.homes.use:
+    description: Allows players to use basic home commands (/home, /sethome, /delhome, /homes)
+    default: true
+  genius.homes.admin:
+    description: Administrative permission that grants access to all management features for other players' homes
+    default: op
+    children:
+      genius.homes.others: true
+      genius.homes.others.teleport: true
+      genius.others.settings: true
+      genius.homes.others.settings.delete: true
+      genius.homes.others.settings.rename: true
+      genius.homes.others.settings.change.sounds: true
+      genius.homes.others.settings.new.location: true
+      genius.homes.others.settings.change.icons: true
+  genius.homes.rename:
+    description: Allows players to rename their own homes via command or GUI
+    default: true
+  genius.homes.sound:
+    description: Allows players to change the teleport sound effect for their homes
+    default: true
+  genius.homes.sounds.*:
+    description: Grants access to all available teleport sound effects
+    default: true
+  genius.homes.bypass.cooldown:
+    description: Allows players to bypass the home teleportation cooldown timer
+    default: false
+  genius.homes.max.*:
+    description: Grants the maximum number of homes allowed by the config
+    default: false
+  genius.homes.others:
+    description: Allows viewing the list of homes belonging to other players using /homes <player>
+    default: op
+  genius.homes.others.teleport:
+    description: Allows teleporting to homes belonging to other players
+    default: op
+  genius.others.settings:
+    description: Legacy permission that grants full access to modify settings of other players' homes
+    default: op
+  genius.homes.others.settings.delete:
+    description: Allows deleting homes belonging to other players
+    default: op
+  genius.homes.others.settings.rename:
+    description: Allows renaming homes belonging to other players
+    default: op
+  genius.homes.others.settings.change.sounds:
+    description: Allows changing teleport sounds for other players' homes
+    default: op
+  genius.homes.others.settings.new.location:
+    description: Allows updating the location of other players' homes
+    default: op
+  genius.homes.others.settings.change.icons:
+    description: Allows changing the GUI icon for other players' homes
+    default: op

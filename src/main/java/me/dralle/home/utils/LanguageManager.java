@@ -34,6 +34,7 @@ public class LanguageManager {
         String activePath = "language/" + activeLanguageCode + ".yml";
         if (!FileUtil.exists(activePath)) {
             plugin.getLogger().warning("Language '" + activeLanguageCode + "' does not exist. Falling back to " + DEFAULT_LANGUAGE + ".");
+            DebugLogger.warning("Language '" + activeLanguageCode + "' does not exist. Falling back to " + DEFAULT_LANGUAGE + ".");
             activeLanguage = defaultLanguage;
             return;
         }
@@ -48,10 +49,12 @@ public class LanguageManager {
         if (defaultLanguage != null && defaultLanguage.isString(path)) {
             if (!DEFAULT_LANGUAGE.equalsIgnoreCase(activeLanguageCode)) {
                 plugin.getLogger().warning("Missing language message '" + path + "' in " + activeLanguageCode + ".yml. Using en_US.yml.");
+                DebugLogger.warning("Missing language message '" + path + "' in " + activeLanguageCode + ".yml. Using en_US.yml.");
             }
             return defaultLanguage.getString(path);
         }
         plugin.getLogger().warning("Missing language message '" + path + "' in active language and en_US.yml.");
+        DebugLogger.warning("Missing language message '" + path + "' in active language and en_US.yml.");
         return "&cMissing message: " + path;
     }
 
@@ -62,10 +65,12 @@ public class LanguageManager {
         if (defaultLanguage != null && defaultLanguage.isList(path)) {
             if (!DEFAULT_LANGUAGE.equalsIgnoreCase(activeLanguageCode)) {
                 plugin.getLogger().warning("Missing language message list '" + path + "' in " + activeLanguageCode + ".yml. Using en_US.yml.");
+                DebugLogger.warning("Missing language message list '" + path + "' in " + activeLanguageCode + ".yml. Using en_US.yml.");
             }
             return defaultLanguage.getStringList(path);
         }
         plugin.getLogger().warning("Missing language message list '" + path + "' in active language and en_US.yml.");
+        DebugLogger.warning("Missing language message list '" + path + "' in active language and en_US.yml.");
         return new ArrayList<>();
     }
 

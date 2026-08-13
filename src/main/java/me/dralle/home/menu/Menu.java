@@ -113,6 +113,7 @@ public abstract class Menu implements InventoryHolder {
         Integer slot = HomePlugin.getMenuConfigManager().getSlot(getMenuId(), "buttons." + buttonId + ".slot", getSlots(), null);
         if (slot == null) {
             plugin.getLogger().warning("menus/" + getMenuId() + ".yml button '" + buttonId + "' has no valid slot.");
+            me.dralle.home.utils.DebugLogger.warning("menus/" + getMenuId() + ".yml button '" + buttonId + "' has no valid slot.");
             return;
         }
         inventory.setItem(slot, createConfiguredItem("buttons." + buttonId, action, replacements));

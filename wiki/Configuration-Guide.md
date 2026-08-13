@@ -320,6 +320,14 @@ genius.homes.sounds.entity_enderman_teleport
 
 ## Troubleshooting
 
+Genius-Homes writes warnings and errors to:
+
+```text
+plugins/Genius-Homes/debug.log
+```
+
+The debug log includes server version, Bukkit version, and plugin version when the plugin starts. Include this file when reporting bugs, but remove private database credentials if you add config snippets.
+
 If a menu does not look right:
 
 1. Check that `rows` is between `1` and `6`.

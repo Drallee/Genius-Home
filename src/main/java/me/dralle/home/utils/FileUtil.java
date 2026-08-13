@@ -66,10 +66,11 @@ public class FileUtil {
                     copy(stream, conf);
                     plugin.getLogger().info("Creating " + pathTo + " for the first time..");
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    DebugLogger.error("Failed to create " + pathTo, e);
                 }
             } else {
                 plugin.getLogger().warning("Could not find internal resource: " + internalPath);
+                DebugLogger.warning("Could not find internal resource: " + internalPath);
             }
         } else {
             // Update existing config with new keys
@@ -89,7 +90,7 @@ public class FileUtil {
                         externalConfig.save(conf);
                         plugin.getLogger().info("Updated " + pathTo + " with missing configuration keys.");
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        DebugLogger.error("Failed to update " + pathTo + " with missing configuration keys.", e);
                     }
                 }
             }

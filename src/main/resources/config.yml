@@ -1,41 +1,111 @@
+# ---------------------------------------------------------------------------
+# Genius-Homes Configuration
+# ---------------------------------------------------------------------------
+#
+# After editing this file, restart the server or run:
+# /reload-home-config
+#
+# Text supports legacy colors, hex colors, and gradients in language/menu files.
+# See the wiki for detailed setup notes.
+
 configVersion: '1.0.0'
 
-# Language file loaded from plugins/Genius-Homes/language/<language>.yml.
-# Only en_US.yml is bundled by default. Server owners can add their own files.
+# Language file loaded from:
+# plugins/Genius-Homes/language/<language>.yml
+#
+# Only en_US.yml is bundled by default. To add a translation, copy en_US.yml,
+# rename it, translate the values, and set this to the file name without .yml.
 language: en_US
 
 settings:
+  # -------------------------------------------------------------------------
+  # Diagnostics
+  # -------------------------------------------------------------------------
+
+  # Enables extra debug console messages.
+  # Warnings and errors are always written to plugins/Genius-Homes/debug.log.
   debug: false
+
+  # Checks Modrinth for new plugin versions.
   update-checker: true
+
+  # Sends anonymous usage statistics to bStats.
   bstats: true
+
+  # -------------------------------------------------------------------------
+  # Database
+  # -------------------------------------------------------------------------
+
   mysql:
+    # false = SQLite file storage
+    # true = MySQL database storage
     use: false
+
+    # Database table name/prefix used by the plugin.
     table-prefix: homes
+
+    # MySQL connection settings. Only used when mysql.use is true.
     host: localhost
     port: 3306
     database: database
     username: root
     password: password
+
+  # -------------------------------------------------------------------------
+  # Homes
+  # -------------------------------------------------------------------------
+
   homes:
+    # If true, homes are separated per world group.
     per-world: false
+
+    # If true, max homes can be controlled with genius.homes.max.<amount>.
     need-permission: true
+
+    # Default maximum homes per player.
+    # Use -1 for no fixed config limit, then control limits through permissions.
     max-amount: 28
+
+    # Home name validation used by commands and AnvilGUI text input.
     names:
       min-length: 1
       max-length: 32
+
       # Java regex. Default allows letters, numbers, underscores, and hyphens.
       allowed-pattern: '^[A-Za-z0-9_-]+$'
+
+    # Requires genius.homes.rename when players rename their own homes.
     rename-permission: false
+
+    # Requires genius.homes.sound when players change their own home sound.
     sound-permission: false
+
+    # Requires genius.homes.sounds.<sound> for each individual sound.
     per-sound-permission: false
+
     teleport:
+      # If false, the plugin blocks teleports to unsafe locations.
+      # If true, players can teleport even if the destination may be unsafe.
       unsafe: false
+
       cooldown:
         enabled: true
+
+        # Cancels pending teleport if the player moves before teleporting.
         cancel-on-move: true
+
+        # Cooldown time in seconds.
         time: 5
+
       cost:
         enabled: false
-        type: XP # Options: VAULT, XP, LEVEL, ITEM
+
+        # Options: VAULT, XP, LEVEL, ITEM
+        # VAULT requires Vault and an economy plugin.
+        type: XP
+
+        # Only used when type is ITEM.
         item: DIAMOND
+
+        # Cost amount for the selected type.
         amount: 10

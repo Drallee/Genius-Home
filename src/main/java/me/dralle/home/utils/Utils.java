@@ -195,6 +195,7 @@ public class Utils {
 
     public static void console(String message, boolean colouredText, boolean isDebug) {
         if (isDebug && !getConfigCheck("settings.debug")) return;
+        DebugLogger.logConsoleMessage(message);
         if (colouredText) {
             message = ColouredText(message);
         }
