@@ -1,58 +1,99 @@
 configVersion: '1.0.0'
+
+# Controls the sounds players can choose for home teleports.
+#
+# Valid sound names must match Bukkit/Paper Sound enum names for your server version.
+# Valid materials must match Bukkit/Paper Material enum names.
+#
+# Text colors support:
+# - Legacy colors: '&aGreen', '&lBold'
+# - Hex colors: '#55AAFFText', '&#55AAFFText', or '<#55AAFF>Text'
+# - Gradients: '<gradient:#55AAFF:#FF55FF>Gradient Text</gradient>'
+# - Multi-gradients: '<gradient:#55AAFF:#FFFFFF:#FF55FF>Gradient Text</gradient>'
+#
+# If settings.homes.per-sound-permission is enabled in config.yml, players need:
+# genius.homes.sounds.<sound-name-lowercase>
+#
+# Example:
+# ENTITY_ENDERMAN_TELEPORT -> genius.homes.sounds.entity_enderman_teleport
 sounds:
   enabled: true
+
+  # Order here is the order shown in the sound selection menu.
   list:
-    - name: "ENTITY_ENDERMAN_TELEPORT"
-      display_name: "&dEnderman Teleport"
-      material: "ENDER_PEARL"
-    - name: "ENTITY_EXPERIENCE_ORB_PICKUP"
-      display_name: "&eExperience Orb"
-      material: "EXPERIENCE_BOTTLE"
-    - name: "BLOCK_NOTE_BLOCK_CHIME"
-      display_name: "&aChime"
-      material: "NOTE_BLOCK"
-    - name: "BLOCK_NOTE_BLOCK_BELL"
-      display_name: "&6Bell"
-      material: "BELL"
-    - name: "BLOCK_NOTE_BLOCK_FLUTE"
-      display_name: "&bFlute"
-      material: "BAMBOO"
-    - name: "BLOCK_NOTE_BLOCK_GUITAR"
-      display_name: "&6Guitar"
-      material: "STRING"
-    - name: "BLOCK_NOTE_BLOCK_XYLOPHONE"
-      display_name: "&fXylophone"
-      material: "BONE"
-    - name: "ENTITY_FIREWORK_ROCKET_LAUNCH"
-      display_name: "&cFirework Launch"
-      material: "FIREWORK_ROCKET"
-    - name: "ENTITY_PLAYER_LEVELUP"
-      display_name: "&aLevel Up"
-      material: "NETHER_STAR"
-    - name: "ENTITY_WITHER_SPAWN"
-      display_name: "&8Wither Spawn"
-      material: "WITHER_SKELETON_SKULL"
-    - name: "BLOCK_ANVIL_LAND"
-      display_name: "&7Anvil Land"
-      material: "ANVIL"
-    - name: "ENTITY_CAT_PURR"
-      display_name: "&6Cat Purr"
-      material: "COD"
-    - name: "ENTITY_WOLF_HOWL"
-      display_name: "&fWolf Howl"
-      material: "BONE"
-    - name: "ENTITY_DRAGON_FIREBALL_EXPLODE"
-      display_name: "&5Dragon Explode"
-      material: "DRAGON_BREATH"
-    - name: "BLOCK_GLASS_BREAK"
-      display_name: "&fGlass Break"
-      material: "GLASS"
-    - name: "BLOCK_CHEST_OPEN"
-      display_name: "&6Chest Open"
-      material: "CHEST"
-    - name: "ENTITY_VILLAGER_YES"
-      display_name: "&aVillager Yes"
-      material: "EMERALD"
-    - name: "ENTITY_VILLAGER_NO"
-      display_name: "&cVillager No"
-      material: "BARRIER"
+    # Teleport / magic
+    - name: ENTITY_ENDERMAN_TELEPORT
+      display_name: '&dEnderman Teleport'
+      material: ENDER_PEARL
+
+    - name: ENTITY_EXPERIENCE_ORB_PICKUP
+      display_name: '&eExperience Orb'
+      material: EXPERIENCE_BOTTLE
+
+    - name: ENTITY_PLAYER_LEVELUP
+      display_name: '&aLevel Up'
+      material: NETHER_STAR
+
+    - name: ENTITY_FIREWORK_ROCKET_LAUNCH
+      display_name: '&cFirework Launch'
+      material: FIREWORK_ROCKET
+
+    # Note block sounds
+    - name: BLOCK_NOTE_BLOCK_CHIME
+      display_name: '&aChime'
+      material: NOTE_BLOCK
+
+    - name: BLOCK_NOTE_BLOCK_BELL
+      display_name: '&6Bell'
+      material: BELL
+
+    - name: BLOCK_NOTE_BLOCK_FLUTE
+      display_name: '&bFlute'
+      material: BAMBOO
+
+    - name: BLOCK_NOTE_BLOCK_GUITAR
+      display_name: '&6Guitar'
+      material: STRING
+
+    - name: BLOCK_NOTE_BLOCK_XYLOPHONE
+      display_name: '&fXylophone'
+      material: BONE
+
+    # Blocks / utility
+    - name: BLOCK_ANVIL_LAND
+      display_name: '&7Anvil Land'
+      material: ANVIL
+
+    - name: BLOCK_GLASS_BREAK
+      display_name: '&fGlass Break'
+      material: GLASS
+
+    - name: BLOCK_CHEST_OPEN
+      display_name: '&6Chest Open'
+      material: CHEST
+
+    # Mobs / ambient
+    - name: ENTITY_CAT_PURR
+      display_name: '&6Cat Purr'
+      material: COD
+
+    - name: ENTITY_WOLF_HOWL
+      display_name: '&fWolf Howl'
+      material: BONE
+
+    - name: ENTITY_VILLAGER_YES
+      display_name: '&aVillager Yes'
+      material: EMERALD
+
+    - name: ENTITY_VILLAGER_NO
+      display_name: '&cVillager No'
+      material: BARRIER
+
+    # Dramatic
+    - name: ENTITY_WITHER_SPAWN
+      display_name: '&8Wither Spawn'
+      material: WITHER_SKELETON_SKULL
+
+    - name: ENTITY_DRAGON_FIREBALL_EXPLODE
+      display_name: '&5Dragon Explode'
+      material: DRAGON_BREATH

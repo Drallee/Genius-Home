@@ -5,7 +5,6 @@ import me.dralle.home.menu.PaginatedMenu;
 import me.dralle.home.menu.PlayerMenuUtility;
 import me.dralle.home.models.Home;
 import me.dralle.home.utils.HomeUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

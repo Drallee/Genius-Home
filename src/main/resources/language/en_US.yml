@@ -43,6 +43,12 @@ chat:
         home:
           not-found: '%chat_prefix% &cSeems like you do not have a home named %home%'
           already-exists: '%chat_prefix% &cSeems like you already have a home named %home%'
+          invalid-name: '%chat_prefix% &cThat home name is invalid.'
+          name-empty: '%chat_prefix% &cHome name cannot be empty.'
+          name-too-short: '%chat_prefix% &cHome name must be at least %min% character(s).'
+          name-too-long: '%chat_prefix% &cHome name cannot be longer than %max% character(s).'
+          name-invalid-characters: '%chat_prefix% &cHome names can only contain letters, numbers, underscores, and hyphens.'
+          name-same: '%chat_prefix% &cNew name matches the old name.'
           rename-usage: '&cTo change the name of your home, use &e/home-rename %home% (new name)'
           others:
             not-found: '%chat_prefix% &cSeems like %target% does not have a home named %home%'
@@ -173,3 +179,24 @@ database:
   message:
     player:
       update-available: '&eA new update is available for &bGenius-Homes&e! Version: &b%version%&e. Download it at: &b%url%'
+
+text-input:
+  home:
+    create:
+      title: '&8Create home'
+      initial-text: 'Home'
+      invalid: '&cThat home name is invalid.'
+      empty: '&cHome name cannot be empty.'
+      too-short: '&cMinimum length: %min%'
+      too-long: '&cMaximum length: %max%'
+      invalid-characters: '&cUse letters, numbers, _ or -'
+      already-exists: '&cHome already exists.'
+    rename:
+      title: '&8Rename: &9%home%'
+      invalid: '&cThat home name is invalid.'
+      empty: '&cHome name cannot be empty.'
+      too-short: '&cMinimum length: %min%'
+      too-long: '&cMaximum length: %max%'
+      invalid-characters: '&cUse letters, numbers, _ or -'
+      already-exists: '&cHome already exists.'
+      same-name: '&cName is unchanged.'

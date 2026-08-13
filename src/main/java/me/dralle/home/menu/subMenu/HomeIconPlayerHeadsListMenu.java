@@ -3,7 +3,6 @@ package me.dralle.home.menu.subMenu;
 import me.dralle.home.menu.PaginatedMenu;
 import me.dralle.home.menu.PlayerMenuUtility;
 import me.dralle.home.models.Home;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

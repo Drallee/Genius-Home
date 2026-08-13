@@ -1,5 +1,8 @@
 package me.dralle.home;
 
+import me.dralle.home.input.HomeNameValidator;
+import me.dralle.home.input.HomeTextInputService;
+import me.dralle.home.input.TextInputService;
 import me.dralle.home.menu.MenuConfigManager;
 import me.dralle.home.menu.PlayerMenuUtility;
 import me.dralle.home.commands.homeCommands.DelHomeCommand;
@@ -35,6 +38,8 @@ public final class HomePlugin extends JavaPlugin {
     private static FileConfiguration soundsConfig;
     private static LanguageManager languageManager;
     private static MenuConfigManager menuConfigManager;
+    private static TextInputService textInputService;
+    private static HomeTextInputService homeTextInputService;
     private static final HashMap<Player, PlayerMenuUtility> playerMenuUtilityMap = new HashMap<>();
     private String latestVersion;
     private boolean updateAvailable = false;
@@ -56,6 +61,8 @@ public final class HomePlugin extends JavaPlugin {
         languageManager.reload();
         menuConfigManager = new MenuConfigManager(this);
         menuConfigManager.reload();
+        textInputService = new TextInputService(this);
+        homeTextInputService = new HomeTextInputService(this, textInputService, new HomeNameValidator());
 
         // Economy setup
         if (!EconomyUtils.setupEconomy()) {
@@ -126,6 +133,9 @@ public final class HomePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (textInputService != null) {
+            textInputService.clearSessions();
+        }
         DatabaseUtil.close();
         getLogger().info("Genius-Homes has been disabled!");
     }
@@ -164,6 +174,10 @@ public final class HomePlugin extends JavaPlugin {
 
     public static MenuConfigManager getMenuConfigManager() {
         return menuConfigManager;
+    }
+
+    public static HomeTextInputService getHomeTextInputService() {
+        return homeTextInputService;
     }
 
     public static PlayerMenuUtility getPlayerMenuUtility(Player p) {

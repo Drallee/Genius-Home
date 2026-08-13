@@ -40,12 +40,11 @@ buttons:
       - '&7Click to change icon'
   rename:
     slot: 31
-    material: BARRIER
+    material: ANVIL
     name: '&eRename home'
     lore:
       - '&7Current: &b%home%'
       - ''
-      - '&cTemporarily disabled'
   delete:
     slot: 24
     material: TNT

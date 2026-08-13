@@ -5,7 +5,7 @@ filler:
   enabled: true
   material: GRAY_STAINED_GLASS_PANE
   name: ''
-  slots: [0-9, 17, 18, 26, 27, 35, 36, 44-53]
+  slots: [0-9, 17, 18, 26, 27, 35, 36, 44, 46-53]
 buttons:
   previous-page:
     slot: 48
@@ -25,8 +25,8 @@ buttons:
     name: '&cClose'
     lore: []
   create-home:
-    slot: 22
-    material: WHITE_BED
+    slot: 45
+    material: LIME_BED
     name: '&aCreate a home'
     lore:
       - '&7Click to set a home'

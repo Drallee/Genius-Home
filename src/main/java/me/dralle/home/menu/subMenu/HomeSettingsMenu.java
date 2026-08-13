@@ -74,10 +74,7 @@ public class HomeSettingsMenu extends Menu {
                     p.sendMessage(ColouredText(getErrorMessagePermission()));
                 }
             }
-            case "rename-home" -> {
-                p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1f, 1f);
-                p.sendMessage(ColouredText(getConfigMessage("chat.prefix.error") + " &cRenaming via GUI is temporarily disabled."));
-            }
+            case "rename-home" -> HomePlugin.getHomeTextInputService().openRenameHomeInput(p, playerMenuUtility);
             case "delete-home" -> {
                 if (isOwner || p.hasPermission("genius.homes.others.settings.delete") || p.hasPermission("genius.others.settings")) {
                     new HomeConfirmDeleteMenu(playerMenuUtility).open();
@@ -112,7 +109,7 @@ public class HomeSettingsMenu extends Menu {
             }
             case "back" -> new HomeListMenu(playerMenuUtility).open();
             case "close" -> e.getWhoClicked().closeInventory();
-            case "disabled-rename" -> p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 1f, 1f);
+            case "disabled-rename" -> HomePlugin.getHomeTextInputService().openRenameHomeInput(p, playerMenuUtility);
             case "disabled-sound" -> p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1f, 1f);
             default -> {
                 if (e.getCurrentItem().getType() == org.bukkit.Material.BARRIER) {
@@ -191,7 +188,7 @@ public class HomeSettingsMenu extends Menu {
         inventory.setItem(HomePlugin.getMenuConfigManager().getSlot(getMenuId(), "buttons.teleport.slot", getSlots(), 20), teleport_button);
         setButton("set-location", "set-location", "%x%", x, "%y%", y, "%z%", z, "%world%", world, "%new_x%", playerLocationX, "%new_y%", playerLocationY, "%new_z%", playerLocationZ, "%new_world%", playerWorld);
         setButton("change-icon", "change-icon");
-        setButton("rename", "disabled-rename", "%home%", homeName);
+        setButton("rename", "rename-home", "%home%", homeName);
         setButton("delete", "delete-home");
         inventory.setItem(HomePlugin.getMenuConfigManager().getSlot(getMenuId(), "buttons.change-sound.slot", getSlots(), 33), change_teleport_sound_button);
         setButton("back", "back");
